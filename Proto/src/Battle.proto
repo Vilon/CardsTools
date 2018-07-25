@@ -1,0 +1,362 @@
+package com.xsk.game.common.proto;
+import "User.proto";
+
+message DeskPublicInfo {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    // 基本信息
+    optional DeskBaseInfo baseInfo = 2;
+    // 当前桌子详细信息
+    optional DeskDetailInfo detailInfo = 3;
+    // 当前桌子状态,0:未开始,1:已开始
+    optional int32 deskState = 4;
+}
+
+message DeskBaseInfo {
+    // 游戏id,0:斗地主
+    optional int32 gameId = 1;
+    // 赛场类型,0:好友场,1:匹配场,2:比赛场
+    optional int32 matchType = 2;
+    // 赛场货币类型,0:金币,1:银币,2:钻石,3:积分
+    optional int32 matchCurrencyType = 3;
+    // 总局数/总圈数
+    optional int32 gameTotalNum = 4;
+    // 桌子玩法,如:{1,2,3}
+    repeated int32 rules = 5;
+    // 人数
+    optional int32 totalPlayerNum = 6;
+    extensions 100 to max;
+//    // 封顶分数
+//    optional int32 limitMaxScore = 7;
+//    // 下注选择,如:1分场,2分场
+//    optional int32 betScore = 8;
+//    // 闷几圈 (扎金花)
+//    optional int32 menNum = 9;
+//    // 抢庄倍数 (牛牛),经典抢庄:0,明牌抢庄传玩家选择分数
+//    optional int32 robotNum = 10;
+//    // 牛番选择(json格式,牛一~五小牛对应番数)
+//    optional string niuFanStr = 11;
+}
+
+// 当前桌子详细信息
+message DeskDetailInfo {
+    // 玩家信息
+    repeated DeskUserInfo userInfos = 1;
+    extensions 100 to max;
+}
+
+message DeskUserInfo {
+    // 玩家Id
+    optional int64 userId = 1;
+    // 玩家类型,0:机器人,1:真实玩家
+    optional int32 userType = 2;
+    // 当前桌子玩家类型,0:未准备(观战),1:准备(玩着的或者下一把即将玩的),2:暂离
+    optional int32 deskUserType = 3;
+    // 当前桌子玩家状态,0:正常,1:离线,2:离开
+    optional int32 deskUserState = 4;
+    // 当前玩家座位号,-1:未坐下
+    optional int32 position = 5;
+    // 好友场玩家游戏信息(包含输赢信息和当前桌子/赛场某些数据统计,如春天次数)
+    optional FriendDeskUserGameCountInfo userGameInfo = 6;
+    // 玩家货币信息
+    repeated CurrencyItem currencyItem = 7;
+    // 玩家牌信息
+    repeated DeskUserCards deskUserCards = 8;
+    extensions 100 to max;
+}
+
+// 好友场玩家游戏信息(包含输赢信息和当前桌子/赛场某些数据统计,如春天次数)
+message FriendDeskUserGameCountInfo {
+    // 玩家Id
+    optional int64 userId = 1;
+    // 游戏局数/圈数(好友场,匹配场)
+    optional int32 currentGameNum = 2;
+    // 玩家总分(当前总分数,包含带入基础分)
+    optional int32 totalPoint = 3;
+    // 玩家总得分(当前总输赢分数,不包含基础分,只统计输赢了多少)
+    optional int32 totalScore = 4;
+}
+
+// 玩家牌信息
+message DeskUserCards {
+    // 玩家ID
+    optional int64 userId = 1;
+    // 手牌
+    optional DeskUserCardsInHand deskUserCardsInHand = 2;
+    // 吃碰杠牌
+    optional DeskUserCardsDown deskUserCardsDown = 3;
+    // 门前牌
+    optional DeskUserCardsBefore deskUserCardsBefore = 4;
+    // 可以出的牌
+    optional DeskUserCardsOut deskUserCardsOut = 5;
+    extensions 100 to max;
+}
+
+message DeskUserCardsInHand {
+    // 玩家ID
+    optional int64 userId = 1;
+    // 手牌
+    repeated int32 cardsInHand = 2;
+}
+
+message DeskUserCardsDown {
+    // 玩家ID
+    optional int64 userId = 1;
+    // 吃碰杠牌
+    repeated CardsDown cardsDown = 2;
+}
+
+message CardsDown {
+    // 吃谁的,碰谁的,杠谁的
+    optional int64 cardsDownUserId = 1;
+    // 吃碰杠牌
+    optional int32 cardsDown = 2;
+}
+
+message DeskUserCardsBefore {
+    // 玩家ID
+    optional int64 userId = 1;
+    // 门前牌
+    repeated int32 cardsBefore = 2;
+}
+
+message DeskUserCardsOut {
+    // 玩家ID
+    optional int64 userId = 1;
+    // 可以出的牌
+    repeated int32 cardsOut = 2;
+}
+
+// 单局结算
+message DeskCurrentSettle {
+    // 赢的人id,<=0,无赢家或者不计算赢家的游戏
+    optional int64 winPlayerId = 1;
+    // 玩家单局结算
+    repeated DeskUserCurrentSettle userSettle = 6;
+    extensions 100 to max;
+}
+
+// 玩家单局结算
+message DeskUserCurrentSettle {
+    // 玩家ID
+    optional int64 userId = 1;
+    // 游戏局数/圈数(好友场,匹配场)
+    optional int32 currentGameNum = 2;
+    // 结算信息
+    optional FriendDeskUserGameCountInfo gameInfo = 3;
+    // 玩家手牌
+    optional DeskUserCardsInHand cardsInHand = 4;
+    extensions 100 to max;
+}
+
+// 总结算
+message DeskFinalSettle {
+    // 桌子id
+    optional int32 deskId = 1;
+    // 桌子基础信息
+    optional DeskBaseInfo baseInfo = 2;
+    // 玩家单局结算
+    repeated DeskUserFinalSettle finalSettle = 3;
+    extensions 100 to max;
+}
+
+// 玩家总结算
+message DeskUserFinalSettle {
+    // 玩家ID
+    optional int64 userId = 1;
+    // 赢得次数
+    optional int32 winNum = 2;
+    // 当前玩家总分(当前总分数,包含带入基础分)
+    optional int32 totalPoint = 3;
+    // 当前玩家总得分(当前总输赢分数,不包含基础分,只统计输赢了多少)
+    optional int32 totalScore = 4;
+    extensions 100 to max;
+}
+
+
+// 游戏开始
+message DeskStart {
+    // 游戏局数/圈数(好友场,匹配场)/轮数(比赛场)
+    optional int32 currentGameNum = 1;
+}
+
+// 提醒操作
+message DDZDeskNotify {
+    // 玩家id
+    repeated DeskUserNotify notify = 1;
+}
+
+// 提醒玩家操作
+message DeskUserNotify {
+    // 玩家id
+    optional int64 userId = 1;
+    // 超时时间
+    optional int32 timeOut = 2;
+    // 操作列表
+    optional int32 actions = 3;
+    extensions 100 to max;
+}
+
+
+// 玩家操作
+message DeskOperation {
+    // 玩家操作(发牌,确认地主,出牌,不要,加倍,不加倍,超级加倍,叫地主,不叫地主,抢地主,不抢地主)
+    optional int32 action = 1;
+    extensions 100 to max;
+}
+
+// 创建房间
+message CreateDeskRequest {
+    optional DeskBaseInfo param = 3;
+}
+
+// 申请解散房间请求+回复
+message DismissDeskSyn {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    // 发起人
+    optional int64 applyDismissUserId = 2;
+    // 剩余时间
+    optional int32 leftTime = 3;
+    // 解散信息
+    repeated DissmissUserModel model = 4;
+}
+
+// 解散信息
+message DissmissUserModel {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int64 userId = 1;
+    // 状态,0:未操作,1:同意,2:不同意
+    optional int32 state = 2;
+}
+
+// 房间解散(服务器单方推送)
+message DeskDismissResponse {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+}
+
+// 加入房间请求
+message enterDeskRequest {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+}
+
+// 加入房间回复(客户端据此初始化场景)
+message enterDeskResponse {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    optional DeskPublicInfo param = 2;
+}
+
+// 玩家加入房间(当玩家加入时全局推送)
+message UserEnterDesk {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    optional DeskUserInfo deskUserInfo = 2;
+}
+
+// 玩家申请离开请求
+message UserApplyExitDeskRequest {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    // 玩家Id
+    optional int64 userId = 2;
+}
+
+// 玩家申请离开回复
+message UserApplyExitDeskResponse {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    // 玩家Id
+    optional int64 userId = 2;
+    // 离开类型,0:标记离开状态(不离开桌子),1:离开桌子
+    optional int32 type = 3;
+}
+
+// 玩家申请坐下请求+回复
+message UserApplySitSyn {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    // 玩家Id
+    optional int64 userId = 2;
+    // 位置
+    optional int32 position = 3;
+}
+
+// 玩家申请离座请求+回复
+message UserApplyLeaveSeatSyn {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    // 玩家Id
+    optional int64 userId = 2;
+    // 位置
+    optional int32 position = 3;
+}
+
+// 玩家申请准备请求+回复
+message UserApplyReadySyn {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    // 玩家Id
+    optional int64 userId = 2;
+}
+
+// 玩家取消准备请求+回复
+message UserApplyCancelReadySyn {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    // 玩家Id
+    optional int64 userId = 2;
+}
+
+// 游戏内聊天
+message UserDeskChatSyn {
+    // 桌子Id(好友场6位,匹配场7位及以上)
+    optional int32 deskId = 1;
+    // 玩家Id
+    optional int64 userId = 2;
+    // 聊天内容
+    optional string content = 3;
+}
+
+// 玩家桌子列表(加入过的)
+message UserDeskListRequest {
+    repeated UserDesk desks = 1;
+}
+
+message UserDesk {
+    // 基本信息
+    optional DeskBaseInfo deskInfo = 1;
+    // 当前游戏局数/圈数/轮数
+    optional int32 currentGameNum = 2;
+    // 当前在玩玩家数量
+    optional int32 currentPlayingPlayersNum = 3;
+}
+
+// 比赛场配置
+message DeskRankConfig {
+    // 桌子配置
+    optional DeskBaseInfo deskBaseInfo = 1;
+    // 晋级信息
+    repeated riseModel rises = 2;
+}
+
+message riseModel {
+    // 第几轮
+    optional int32 lunNum = 1;
+    // 该轮最大排名
+    optional int32 maxRankNum = 2;
+}
+
+// 比赛场排行榜
+message DeskRankSyn {
+    // 玩家ID
+    optional int64 userId = 1;
+    // 玩家排行
+    optional int32 rankNum = 2;
+    // 剩余比赛人数
+    optional int32 leftPlayerNum = 4;
+    // 比赛轮数
+    optional int32 lunNum = 5;
+}

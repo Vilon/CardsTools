@@ -1,0 +1,6 @@
+package com.xsk.game.common.proto;
+
+//全局报错
+message ErrorSyn {
+    optional string msg = 1;
+}

@@ -1,0 +1,78 @@
+package com.xsk.game.common.proto;
+
+// 认证
+message AuthRequest {
+    // 用户id
+    optional int64 userId = 1;
+    // token
+    optional string token = 2;
+    // 客户端版本号
+    optional string version = 3;
+}
+
+// 认证
+message AuthResponse {
+
+}
+
+// 用户基础信息请求
+message UserBaseInfoRequset {
+    // 玩家ID
+    repeated int64 userId = 1;
+}
+
+// 用户基础信息回复
+message UserBaseInfoResponse {
+    // 玩家列表
+    repeated UserBaseInfoSyn userBaseInfos = 1;
+}
+
+// 同步用户基础信息
+message UserBaseInfoSyn {
+    // 玩家ID
+    optional int64 userId = 1;
+    // 玩家昵称
+    optional string nickName = 2;
+    // 玩家头像
+    optional string headImg = 3;
+    // 性别,1:男,2:女,0:未知
+    optional int32 sex = 4;
+}
+
+// 用户货币信息请求
+message UserCurrencyInfoRequset {
+    // 玩家ID
+    repeated int64 userId = 1;
+}
+
+// 用户货币信息回复
+message UserCurrencyInfoResponse {
+    // 玩家列表
+    repeated UserInfoCurrencySyn userCurrencyInfos = 1;
+}
+
+// 同步用户货币信息
+message UserInfoCurrencySyn {
+    // 玩家ID
+    optional int64 userId = 1;
+    // 货币数
+    repeated CurrencyItem currency = 2;
+}
+
+// 货币基类
+message CurrencyItem {
+    // 货币类型,1:金币,2:银币,3:钻石
+    optional int32 type = 1;
+    // 货币数量
+    optional int64 num = 2;
+}
+
+// 修改用户信息
+message UpdateUserInfoRequest {
+    // 头像
+    optional string headImg = 1;
+    // 昵称
+    optional string nickName = 2;
+    // 性别,1:男,2:女,0:未知
+    optional int32 sex = 3;
+}

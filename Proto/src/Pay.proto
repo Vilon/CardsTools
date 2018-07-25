@@ -1,0 +1,68 @@
+package com.xsk.game.common.proto;
+
+// 商城产品配置
+message MallProductConfigRequest {
+
+}
+
+// 商城产品配置
+message MallProductConfigResponse {
+    // 商品列表
+    repeated MallProductModel products = 1;
+}
+
+// 商城产品
+message MallProductModel {
+    // 商品id
+    optional string id = 1;
+    // 商品名称
+    optional string name = 2;
+    // 商品图片
+    optional string image = 3;
+    // 分类0:金币,1:房卡
+    optional int32 category = 4;
+    // 价格
+    optional int32 price = 5;
+    // 道具数量
+    optional int32 itemCount = 6;
+    // 折扣数量
+    optional int32 discountItemCount = 7;
+}
+
+// 支付流程
+// 安卓:生成订单-->交易-->接受回调(支付宝/微信)-->交易成功
+// 苹果:客户端直接交易-->客户端交易完成-->服务端订单验证-->交易成功
+// 钱包:客户端请求-->交易完成
+
+// 生成订单(安卓:苹果/微信)
+message GenOrderRequest {
+    // 1:微信,2:支付宝,4:钱包
+    optional int32 type = 1;
+    // 商品id
+    optional string productId = 2;
+}
+
+// 生成订单(安卓:苹果/微信)
+message GenOrderResponse {
+    // 订单id
+    optional string orderId = 1;
+    // 1:微信,2:支付宝,3:苹果,4:钱包
+    optional int32 type = 2;
+    // 签名数据,平台相关
+    optional string data = 3;
+}
+
+// 苹果支付完成
+message IPABuyItemComplete {
+    // 订单id
+    optional string orderId = 1;
+    // 苹果支付结果(苹果回调传来)
+    optional string result = 2;
+}
+
+
+
+
+
+
+

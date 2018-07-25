@@ -1,0 +1,39 @@
+package com.xsk.game.common.proto;
+
+// 排行榜请求
+message RankRequest {
+    // 游戏Id
+    optional string gameId = 1;
+    // 1:财富榜
+    optional int32 type = 2;
+}
+
+// 排行榜基类
+message RankSyn {
+    // 财富榜:ALL,周开月开:真实gameid
+    optional string gameid = 1;
+    // 1:财富榜
+    optional int32 type = 2;
+    // 具体排行数据
+    repeated RankItem rankList = 3;
+}
+
+// 排行榜数据基类
+message RankItem {
+    // 排名
+    optional int32 rankNum = 1;
+    // 玩家Id
+    optional int64 userId = 2;
+    // 货币数(财富榜)
+    repeated currencyItem currency = 3;
+    // 其余排行榜数据 (如:开局榜开局数,胜率榜胜率,战力榜战力)
+    optional int64 point = 4;
+}
+
+// 货币基类
+message currencyItem {
+    // 货币类型,1:金币,2:银币,3:钻石
+    optional int32 type = 1;
+    // 货币数量
+    optional int64 num = 2;
+}

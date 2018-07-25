@@ -1,0 +1,108 @@
+package com.xsk.game.common.proto;
+import "Battle.proto";
+
+message DDZDeskBaseInfo {
+    // 封顶分数
+    optional int32 limitMaxScore = 1;
+
+    extend DeskBaseInfo {
+        optional DDZDeskBaseInfo ddzDeskBaseInfo = 100;
+    }
+}
+
+message DDZDeskDetailInfo {
+    // 庄家id(地主id),0:未确认庄家或者无庄家
+    optional int64 bankerUserId = 1;
+    // 当前桌子局数
+    optional int32 currentGameNum = 2;
+    // 当前桌子斗地主倍数(包括炸弹春天等等倍数)
+    optional int32 multiple = 3;
+    // 底牌
+    repeated int32 diPai = 4;
+    // 让牌数
+    optional int32 rangPaiNum = 5;
+
+    extend DeskDetailInfo {
+        optional DDZDeskDetailInfo ddzDeskDetailInfo = 100;
+    }
+}
+
+message DDZDeskUserInfo {
+    // 是否加倍,0,未操作,1:不加倍,2:加倍,3,超级加倍
+    optional int32 doubleType = 1;
+
+    extend DeskUserInfo {
+        optional DDZDeskUserInfo ddzDeskUserInfo = 100;
+    }
+}
+
+// 提醒玩家操作
+message DDZDeskUserNotify {
+    // 抢地主能喊的分数
+    repeated int32 robNum = 1;
+    // 提示可以出的牌
+    repeated DeskUserCardsOut cardsOut = 2;
+    // 能不能出,1:随便出,2:能出,3:不能出(没有牌大过上家)
+    optional int32 operType = 3;
+
+    extend DeskUserNotify {
+        optional DDZDeskUserNotify ddzDeskUserNotify = 100;
+    }
+}
+
+// 玩家操作
+message DDZDeskOperation {
+    // 玩家手牌
+    repeated DeskUserCardsInHand cardsInHand = 1;
+    // 庄家id(地主id),0:未确认庄家或者无庄家
+    optional int64 bankerUserId = 2;
+    // 出的牌
+    repeated int32 cardsOper = 3;
+    // 出的牌牌型
+    repeated int32 cardsOperType = 4;
+    // 叫/抢地主分数
+    optional int32 robNum = 5;
+    // 当前游戏倍数
+    optional int32 multiple = 6;
+    // 让牌数(二人斗地主)
+    optional int32 rangPaiNum = 7;
+
+    extend DeskOperation {
+        optional DDZDeskOperation ddzDeskOperation = 100;
+    }
+}
+
+// 单局结算
+message DDZDeskCurrentSettle {
+    // 是否春天
+    optional bool spring = 1;
+    // 当前游戏倍数
+    optional int32 multiple = 2;
+    // 当前炸弹次数
+    optional int32 bombNum = 3;
+    // 当前王炸次数
+    optional int32 kingBombNum = 4;
+
+    extend DeskCurrentSettle {
+        optional DDZDeskCurrentSettle ddzDeskCurrentSettle = 100;
+    }
+}
+
+// 玩家单局结算(手牌规则: 三人斗地主赢得人的手牌为最后一次出的牌,二人斗地主若该人出完了则为最后一次出的牌,否则为剩下的牌)
+message DDZDeskUserCurrentSettle {
+
+}
+
+// 总结算
+message DDZDeskFinalSettle {
+
+}
+
+// 玩家总结算
+message DDZUserFinalSettle {
+
+}
+
+
+
+
